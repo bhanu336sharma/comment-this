@@ -1,150 +1,136 @@
-<!DOCTYPE html> 
-<html> 
-  <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
-  <link href="bootstrap.colorpickersliders.css" rel="stylesheet" type="text/css" media="all">
-<body>
-  <div style="width:900px;height:500px">
-    <div style="float:left">
-      <div style="width: 46.5%;position: absolute; height: 36px;" id="mybox">
+<div style="width:900px;height:500px">
+  <div style="float:left">
+    <div style="width: 46.5%;position: absolute; height: 36px;" id="mybox">
+    </div>
+    <video width="600" controls>
+      <source src="video.mp4" type="video/mp4">
+    </video>
+    <form class="form-inline">
+      <div class="form-group">
+        <label>Comment</label>
+        <input type="text" class="caption form-control" placeholder="Comment">
       </div>
-      <video width="600" controls>
-        <source src="video.mp4" type="video/mp4">
-      </video>
-      <form class="form-inline">
-        <div class="form-group">
-          <label>Comment</label>
-          <input type="text" class="caption form-control" placeholder="Comment">
-        </div>
-        <div id="submit_btn" class="btn btn-primary">Submit</div>
-        <div id="hide_show" class="btn btn-warning">Hide Comment</div>
-        <input type="text" id="color-picker" class="btn" value="#000000" data-color-format="hex" style="width: 100px">
-      </form>
-      <p>Playback position: <span id="demo"></span></p>
-    </div>
-    <div style="float:right" id="comments">
-      <h2>Comments:</h2>
-      <table id="comments" class="table table-bordered">
-        <tr><th>Comment</th><th>Time</th><th>color</th></tr>
-        <% @comment.each do |c| %>
-        	<% if c.user_id == current_user.id %>
-		        <tr>
-		            <td>
-		              <%= c.body %>
-		            </td>
-		            <td>
-		              <%= c.time %>
-		            </td>
-		            <td>
-		              <%= c.color %>
-		            </td>
-		        </tr> 
-	        <% end %>
-        <% end %>
-      </table>
-    </div>
+      <div id="submit_btn" class="btn btn-primary">Submit</div>
+      <div id="hide_show" class="btn btn-warning">Hide Comment</div>
+      <input type="text" id="color-picker" class="btn" value="#000000" data-color-format="hex" style="width: 100px">
+    </form>
+    <p>Playback position: <span id="demo"></span></p>
   </div>
+  <div style="float:right" id="comments">
+    <h2>Comments:</h2>
+    <table id="comments" class="table table-bordered">
+      <tr><th>Comment</th><th>Time</th><th>color</th></tr>
+      <% @comment.each do |c| %>
+      	<% if c.user_id == current_user.id %>
+	        <tr>
+	            <td>
+	              <%= c.body %>
+	            </td>
+	            <td>
+	              <%= c.time %>
+	            </td>
+	            <td>
+	              <%= c.color %>
+	            </td>
+	        </tr> 
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+</div>
 
-  <script src="jquery.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/tinycolor/0.11.1/tinycolor.min.js"></script>
-  <script src="bootstrap.colorpickersliders.js"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $("#color-picker").ColorPickerSliders({
-          placement: 'right',
-          hsvpanel: true,
-          previewformat: 'hex'
-        });
-    })
-    var video = $('video')[0]
-
-    if(video.readyState > 0) {
-      console.log("======")
-      var minutes = parseInt(video.duration / 60, 10);
-      var seconds = video.duration % 60;      
-    }
-
-    video.onplay = function() {
-      t=parseInt(video.currentTime)
-      $( ".abc" ).each(function() {
-        $(this).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#color-picker").ColorPickerSliders({
+        placement: 'right',
+        hsvpanel: true,
+        previewformat: 'hex'
       });
-    };
+  })
+  var video = $('video')[0]
 
-    video.onpause = function() {
-      $('.abc').stop()
-    };
-    
-    video.ontimeupdate = function() {myFunction()};
-    
-    var x = ""
-    function myFunction() {
-      $("#demo").html(video.currentTime)
-      t=parseInt(video.currentTime)
+  if(video.readyState > 0) {
+    console.log("======")
+    var minutes = parseInt(video.duration / 60, 10);
+    var seconds = video.duration % 60;      
+  }
 
-      if(x!=t){
-        c=$($("tr[value='"+t+"'] td")[0]).html()
-        color=$($("tr[value='"+t+"'] td")[2]).html()
-        if ((c != undefined && $("#mybox span[value='"+t+"']").html() == undefined)){
-          d=c.split('-')[0]
-          animate_text(c, color)
-        }else{
-          
-        }
-      }
-      x=t
-    }
+  video.onplay = function() {
+    t=parseInt(video.currentTime)
+    $( ".abc" ).each(function() {
+      $(this).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
+    });
+  };
 
-    $("#submit_btn").click(function(event) {
-      if($(".caption").val() != "" && !video.paused){
-        var time = parseInt($('video')[0].currentTime)
-        var c = $(".caption").val()
-        var t=parseInt($('video')[0].currentTime)
-        var color = $("#color-picker").val()
+  video.onpause = function() {
+    $('.abc').stop()
+  };
+  
+  video.ontimeupdate = function() {myFunction()};
+  
+  var x = ""
+  function myFunction() {
+    $("#demo").html(video.currentTime)
+    t=parseInt(video.currentTime)
+
+    if(x!=t){
+      c=$($("tr[value='"+t+"'] td")[0]).html()
+      color=$($("tr[value='"+t+"'] td")[2]).html()
+      if ((c != undefined && $("#mybox span[value='"+t+"']").html() == undefined)){
+        d=c.split('-')[0]
         animate_text(c, color)
-        $(".caption").val("")
-        $("#comments tbody").append("<tr value="+time+"><td>"+c+"</td><td>"+time+"</td><td>"+color+"</td></tr>")
-        $.ajax({    
-          url: "/addcomments",
-          data: {body: c, time: time, color: color} ,         
-          success: function(data){    
-          },
-          error:function(){
-          } 
-        })
-      }
-    });
-
-    function animate_text(c, color){
-      t=parseInt($('video')[0].currentTime)
-      html = '<span class="abc" style="padding: 8px; border: 1px solid yellow;float:right;position: absolute;margin-left:545px; color:'+color+' " value="'+t+'">'+c+'</span>'
-
-      $("#mybox").append(html)
-
-      $($("#mybox span[value='"+t+"']")[0]).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
-    }
-
-    $('.caption').keypress(function (e) {
-     var key = e.which;
-     if(key == 13 && !video.paused)  // the enter key code
-      {
-        $("#submit_btn").click();
-        return false;  
-      }
-    });
-
-    $("#hide_show").click(function() {
-      if ($(this).html() == "Hide Comment"){
-        $(this).html("Show Comment")
-        $("#mybox").hide()
       }else{
-        $(this).html("Hide Comment")
-        $("#mybox").show()
+        
       }
-    });
-  </script>
+    }
+    x=t
+  }
 
-</body> 
-</html>
+  $("#submit_btn").click(function(event) {
+    if($(".caption").val() != "" && !video.paused){
+      var time = parseInt($('video')[0].currentTime)
+      var c = $(".caption").val()
+      var t=parseInt($('video')[0].currentTime)
+      var color = $("#color-picker").val()
+      animate_text(c, color)
+      $(".caption").val("")
+      $("#comments tbody").append("<tr value="+time+"><td>"+c+"</td><td>"+time+"</td><td>"+color+"</td></tr>")
+      $.ajax({    
+        url: "/addcomments",
+        data: {body: c, time: time, color: color} ,         
+        success: function(data){    
+        },
+        error:function(){
+        } 
+      })
+    }
+  });
+
+  function animate_text(c, color){
+    t=parseInt($('video')[0].currentTime)
+    html = '<span class="abc" style="padding: 8px; border: 1px solid yellow;float:right;position: absolute;margin-left:545px; color:'+color+' " value="'+t+'">'+c+'</span>'
+
+    $("#mybox").append(html)
+
+    $($("#mybox span[value='"+t+"']")[0]).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
+  }
+
+  $('.caption').keypress(function (e) {
+   var key = e.which;
+   if(key == 13 && !video.paused)  // the enter key code
+    {
+      $("#submit_btn").click();
+      return false;  
+    }
+  });
+
+  $("#hide_show").click(function() {
+    if ($(this).html() == "Hide Comment"){
+      $(this).html("Show Comment")
+      $("#mybox").hide()
+    }else{
+      $(this).html("Hide Comment")
+      $("#mybox").show()
+    }
+  });
+</script>
