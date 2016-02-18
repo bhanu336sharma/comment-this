@@ -1,7 +1,8 @@
 <div style="width:900px;height:500px">
-  <div style="float:left">
-    <div style="width: 46.5%;position: absolute; height: 36px;" id="mybox">
-    </div>
+  <div style="float:left;width: 75%">
+    <div style="width: 46.5%;position: absolute; height: 36px;" id="mybox_top"></div>
+    <div style="width: 46.5%;position: absolute; height: 36px;top: 20%" id="mybox_center"></div>
+    <div style="width: 46.5%;position: absolute; height: 36px;top: 40%" id="mybox_bottom"></div>
     <video width="600" controls>
       <source src="video.mp4" type="video/mp4">
     </video>
@@ -14,12 +15,20 @@
       <div id="hide_show" class="btn btn-warning">Hide Comment</div>
       <input type="text" id="color-picker" class="btn" value="#000000" data-color-format="hex" style="width: 100px">
     </form>
+    <div class="" style="margin: 15px">
+      <label>Position</label>
+      <select class="position">
+      <option value="top">Top</option>
+      <option value="center">Center</option>
+      <option value="bottom">Bottom</option>
+      </select>
+    </div>
     <p>Playback position: <span id="demo"></span></p>
   </div>
-  <div style="float:right" id="comments">
+  <div style="float:right;width: 25%" id="comments">
     <h2>Comments:</h2>
     <table id="comments" class="table table-bordered">
-      <tr><th>Comment</th><th>Time</th><th>color</th></tr>
+    <tr><th>Comment</th><th>Time</th><th>color</th><th>Position</th></tr>
       <% @comment.each do |c| %>
       	<% if c.user_id == current_user.id %>
 	        <tr>
@@ -42,10 +51,10 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $("#color-picker").ColorPickerSliders({
-        placement: 'right',
-        hsvpanel: true,
-        previewformat: 'hex'
-      });
+      placement: 'right',
+      hsvpanel: true,
+      previewformat: 'hex'
+    });
   })
   var video = $('video')[0]
 
@@ -76,43 +85,45 @@
     if(x!=t){
       c=$($("tr[value='"+t+"'] td")[0]).html()
       color=$($("tr[value='"+t+"'] td")[2]).html()
-      if ((c != undefined && $("#mybox span[value='"+t+"']").html() == undefined)){
+      var pos = $($("tr[value='"+t+"'] td")[3]).html()
+      if ((c != undefined && $("#mybox_"+pos+" span[value='"+t+"']").html() == undefined)){
         d=c.split('-')[0]
-        animate_text(c, color)
-      }else{
-        
+        animate_text(c, color, pos)
+      }
+      else{       
       }
     }
     x=t
   }
 
   $("#submit_btn").click(function(event) {
-    if($(".caption").val() != "" && !video.paused){
-      var time = parseInt($('video')[0].currentTime)
-      var c = $(".caption").val()
-      var t=parseInt($('video')[0].currentTime)
-      var color = $("#color-picker").val()
-      animate_text(c, color)
-      $(".caption").val("")
-      $("#comments tbody").append("<tr value="+time+"><td>"+c+"</td><td>"+time+"</td><td>"+color+"</td></tr>")
-      $.ajax({    
-        url: "/addcomments",
-        data: {body: c, time: time, color: color} ,         
-        success: function(data){    
-        },
-        error:function(){
-        } 
-      })
-    }
+      setTimeout(function(){
+        if($(".caption").val() != "" && !video.paused){
+          var pos = $( ".position option:selected" ).val()
+          var time = parseInt($('video')[0].currentTime)
+          var c = $(".caption").val()
+          var t=parseInt($('video')[0].currentTime)
+          var color = $("#color-picker").val()
+          animate_text(c, color, pos)
+          $(".caption").val("")
+          $("#comments tbody").append("<tr value="+time+"><td>"+c+"</td><td>"+time+"</td><td>"+color+"</td><td>"+pos+"</td></tr>")
+          $.ajax({    
+            url: "/addcomments",
+            data: {body: c, time: time, color: color} ,         
+            success: function(data){    
+            },
+            error:function(){
+            } 
+          })
+       }
+     }, 500);
   });
 
-  function animate_text(c, color){
+  function animate_text(c, color,pos){  
     t=parseInt($('video')[0].currentTime)
-    html = '<span class="abc" style="padding: 8px; border: 1px solid yellow;float:right;position: absolute;margin-left:545px; color:'+color+' " value="'+t+'">'+c+'</span>'
-
-    $("#mybox").append(html)
-
-    $($("#mybox span[value='"+t+"']")[0]).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
+    html = '<span class="abc" style="padding: 8px; border: 2px solid yellow;float:right;font-weight: bold;position: absolute;margin-left:545px; color:'+color+' " value="'+t+'">'+c+'</span>'
+    $("#mybox_"+pos).append(html)
+    $($("#mybox_"+pos+" span[value='"+t+"']")[0]).animate({left: '-=610'}, {duration: 4000,complete: function() { $(this).remove() }});
   }
 
   $('.caption').keypress(function (e) {
