@@ -1,0 +1,4 @@
+ // <%= link_to_remote "Create comment", :url => {:controller=>'comments', :action =>'new'} %>  
+
+
+ <%= #form_for current_user, :url => {:controller => "users", :action => "index"}, :remote => true do |f| %>

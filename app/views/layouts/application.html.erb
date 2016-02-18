@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <div class="navbar-wrapper">
+    <div class="container">
+      <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <div class="container">
+          <ul class="nav navbar-nav" style="width:1000px">
+          	<%if user_signed_in?%>
+          	            
+          		 <li class="pull-right" ><%=link_to "Sign Out", "/users/sign_out", method: :delete %></li>
+          	<%else%>
+          	    <li class="pull-right" ><%=link_to "Sign Up", "/users/sign_up"%></li>  
+          	    <li class="pull-right" ><%=link_to "Sign In", "/users/sign_in" %></li>        
+          	<%end%>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<%= yield %>
+
+</body>
+</html>
