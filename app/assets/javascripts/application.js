@@ -13,4 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require bootstrap.min.js
+//= require run_prettify.min.js
+//= require tinycolor.min.js
+//= require bootstrap.colorpickersliders.js
+
