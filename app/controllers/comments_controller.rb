@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   end
 
   def addcomment
-		@comment = current_user.comments.create(body: params[:body],time: params[:time], color: params[:color])#Comment.new
+		@comment = current_user.comments.create(body: params[:body],time: params[:time], color: params[:color], pos: params[:pos])#Comment.new
     render :json => {status: "ok"}
 	end
 

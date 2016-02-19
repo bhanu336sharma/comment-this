@@ -109,7 +109,7 @@
           $("#comments tbody").append("<tr value="+time+"><td>"+c+"</td><td>"+time+"</td><td>"+color+"</td><td>"+pos+"</td></tr>")
           $.ajax({    
             url: "/addcomments",
-            data: {body: c, time: time, color: color} ,         
+            data: {body: c, time: time, color: color, pos: pos} ,         
             success: function(data){    
             },
             error:function(){
@@ -127,8 +127,8 @@
   }
 
   $('.caption').keypress(function (e) {
-   var key = e.which;
-   if(key == 13 && !video.paused)  // the enter key code
+    var key = e.which;
+    if(key == 13 && !video.paused)  // the enter key code
     {
       $("#submit_btn").click();
       return false;  
